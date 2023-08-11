@@ -18,6 +18,10 @@
       <td>{{this.date}}</Td>
       <td>{{this.category}}</Td>
       <td>{{this.account}}</Td>
+       <td>
+          <a href="/expenses/edit/{{this._id}}" class="btn btn-info">Edit</a>
+          <a href="/expenses/delete/{{this._id}}" onclick="return confirmDeletion()" class="btn btn-danger">Delete</a>
+        </td>
     </tr>
   {{/each}}
   </tbody>

@@ -52,4 +52,45 @@ router.post('/add', (req, res, next) => {
     });
 });
 
+
+//GET
+//DELETE
+router.get("/delete/:_id", (req, res, next) => {
+    Expense.remove(
+      {
+        _id: req.params._id,
+      },
+      (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/expenses");
+        }
+      }
+    );
+  });
+
+
+  //GET
+  //EDIT
+  router.get("/edit/:_id", (req, res, next) => {
+    Expense.findById(req.params._id, (err, expense) => {
+      if (err) {
+        console.log(err);
+      } else {
+        Account.find((err, accounts) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.render("expenses/edit", {
+              title: "Edit a Expense",
+              expense: expense,
+              accounts: accounts,
+            });
+          }
+        }).sort({ name: 1 });
+      }
+    });
+  });
+
 module.exports = router;
