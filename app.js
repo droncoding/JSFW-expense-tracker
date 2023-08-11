@@ -49,6 +49,11 @@ hbs.registerHelper('createOption', (currentValue, selectedValue) => {
   return new hbs.SafeString(`<option ${selectedProperty}>${currentValue}</option>`);
 });
 
+// date formatter from class project
+hbs.registerHelper("toShortDate", (longDateValue) => {
+  return new hbs.SafeString(longDateValue.toLocaleDateString("en-CA"));
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
