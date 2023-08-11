@@ -1,0 +1,24 @@
+<h1>
+  {{title}}
+</h1>
+
+<a href="/expenses/add">Add a new expense</a>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Category</th>
+    <th>Account</th>
+  </thead>
+  <tbody>
+  {{#each dataset}}
+    <tr>
+      <td>{{this.amount}}</Td>
+      <td>{{this.date}}</Td>
+      <td>{{this.category}}</Td>
+      <td>{{this.account}}</Td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
