@@ -3,8 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
 const mongoose = require('mongoose');
 require('polyfill-object.fromentries');
+
+var passport = require('passport');
+var session = require('express-session');
+var User = require('./models/user');
 
 var indexRouter = require('./routes/index');
 var expensesRouter = require('./routes/expenses');
@@ -21,6 +26,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//authentication
+app.use(session({
+  secret: 'jsfw', 
+  resave: false, 
+  saveUninitialized: false 
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(User.createStrategy()); 
+passport.serializeUser(User.serializeUser()); 
+passport.deserializeUser(User.deserializeUser());
+
+//routers
 app.use('/', indexRouter);
 app.use('/expenses', expensesRouter);
 
