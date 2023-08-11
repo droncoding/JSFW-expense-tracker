@@ -7,35 +7,32 @@
     <label for="amount" class="col-2">
       Amount:
     </label>
-    <input name="amount" id="amount" required />
+    <input name="amount" id="amount" value="{{expense.amount}}" required />
   </fieldset>
   <fieldset>
     <label for="date" class="col-2">
       Date:
     </label>
-    <input name="date" id="date" required type="date" />
+    <input name="date" id="date" required value="{{expense.date}}" />
   </fieldset>
   <fieldset>
     <label for="category" class="col-2">
       Category:
     </label>
-    <input name="category" id="category" required />
+    <input name="category" id="category" value="{{expense.category}}" required />
   </fieldset>
   <fieldset>
     <label for="account" class="col-2">
       Account:
     </label>
     <select name="account" id="account">
-      {{!-- TODO: FIGURE OUT HOW TO PRINT SEVERAL <OPTION></OPTION> ELEMENTS --}}
-      {{!-- <option>JS FRAMEWORKS</option>
-      <option>ASP.NET</option> --}}
+      
       {{#each accountList}}
-        <option>{{this.name}}</option>
+        {{createOption this.name ../expense.account }}
       {{/each}}
     </select>
   </fieldset>
-  {{! No need to specify Status since it has a default value }}
-  {{! Button needs to be inside <form> element to trigger POST }}
+  
   <button class="offset-3 btn btn-primary">
     Save
   </button>

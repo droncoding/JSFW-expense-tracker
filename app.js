@@ -37,6 +37,17 @@ mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: 
     console.log(`Error while connecting! ${error}`);
   });
 
+//code from class project
+const hbs = require('hbs');
+hbs.registerHelper('createOption', (currentValue, selectedValue) => {
+ 
+  var selectedProperty = '';
+  
+  if (currentValue == selectedValue) {
+    selectedProperty = 'selected';
+  }
+  return new hbs.SafeString(`<option ${selectedProperty}>${currentValue}</option>`);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

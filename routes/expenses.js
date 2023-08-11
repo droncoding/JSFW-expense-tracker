@@ -93,4 +93,26 @@ router.get("/delete/:_id", (req, res, next) => {
     });
   });
 
+
+  //POST
+  //EDIT
+  router.post("/edit/:_id", (req, res, next) => {
+    
+    Expense.findOneAndUpdate(
+      { _id: req.params._id },
+      {
+        amount: req.body.amount,
+        date: req.body.date,
+        category: req.body.category,
+        account: req.body.account,
+      },
+      (err, updatedExpense) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/expenses");
+        }
+      }
+    );
+  });
 module.exports = router;
