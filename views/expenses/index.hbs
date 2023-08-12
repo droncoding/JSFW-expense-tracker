@@ -2,7 +2,9 @@
   {{title}}
 </h1>
 
+{{#if ../user}}
 <a href="/expenses/add">Add a new expense</a>
+{{/if}}
 
 <table class="table table-striped table-hover">
   <thead>
@@ -18,10 +20,12 @@
       <td>{{toShortDate this.date}}</Td>
       <td>{{this.category}}</Td>
       <td>{{this.account}}</Td>
+      {{#if ../user}}
        <td>
           <a href="/expenses/edit/{{this._id}}" class="btn btn-info">Edit</a>
           <a href="/expenses/delete/{{this._id}}" onclick="return confirmDeletion()" class="btn btn-danger">Delete</a>
         </td>
+      {{/if}}
     </tr>
   {{/each}}
   </tbody>

@@ -6,6 +6,15 @@ const router = express.Router();
 const Expense = require('../models/expenses');
 const Account = require("../models/accounts");
 
+
+function IsLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next(); // continue processing request
+    }
+    res.redirect("/login"); // not authenticated
+  }
+
+
 router.get('/', (req, res, next) => {
 
     Expense.find((err, expenses) => {
@@ -13,14 +22,17 @@ router.get('/', (req, res, next) => {
             console.log(err);
         }
         else {
-            res.render('expenses/index', { title: 'Expense Tracker', dataset: expenses });
+            res.render('expenses/index', { 
+                title: 'Expense Tracker', 
+                dataset: expenses,
+                user: req.user
+             });
         }
     })
 
-    //res.render('expenses/index', { title: 'Expense Tracker' });
 });
 
-router.get('/add', (req, res, next) => {
+router.get('/add', IsLoggedIn, (req, res, next) => {
 
     Account.find((err, accounts) => {
         if (err) {
@@ -29,6 +41,7 @@ router.get('/add', (req, res, next) => {
           res.render("expenses/add", {
             title: "Add a New Expense",
             accountList: accounts,
+            user: req.user
           });
         }
       });
@@ -36,7 +49,7 @@ router.get('/add', (req, res, next) => {
 
 
 // Add POST handler
-router.post('/add', (req, res, next) => {
+router.post('/add', IsLoggedIn, (req, res, next) => {
     Expense.create({
         amount: req.body.amount,
         date: req.body.date,
@@ -55,7 +68,7 @@ router.post('/add', (req, res, next) => {
 
 //GET
 //DELETE
-router.get("/delete/:_id", (req, res, next) => {
+router.get("/delete/:_id", IsLoggedIn, (req, res, next) => {
     Expense.remove(
       {
         _id: req.params._id,
@@ -73,7 +86,7 @@ router.get("/delete/:_id", (req, res, next) => {
 
   //GET
   //EDIT
-  router.get("/edit/:_id", (req, res, next) => {
+  router.get("/edit/:_id", IsLoggedIn, (req, res, next) => {
     Expense.findById(req.params._id, (err, expense) => {
       if (err) {
         console.log(err);
@@ -96,7 +109,7 @@ router.get("/delete/:_id", (req, res, next) => {
 
   //POST
   //EDIT
-  router.post("/edit/:_id", (req, res, next) => {
+  router.post("/edit/:_id", IsLoggedIn, (req, res, next) => {
     
     Expense.findOneAndUpdate(
       { _id: req.params._id },
