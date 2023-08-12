@@ -10,11 +10,13 @@ require('polyfill-object.fromentries');
 var passport = require('passport');
 var session = require('express-session');
 var User = require('./models/user');
+var githubStrategy = require("passport-github2").Strategy;
 
 var indexRouter = require('./routes/index');
 var expensesRouter = require('./routes/expenses');
 
 var app = express();
+const config = require('./config/globals');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,6 +39,33 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(User.createStrategy()); 
+
+passport.use(
+  new githubStrategy(
+    {
+      clientID: config.github.clientId,
+      clientSecret: config.github.clientSecret,
+      callbackURL: config.github.callbackUrl,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const user = await User.findOne({ oauthId: profile.id });
+      if (user) {
+        return done(null, user);
+      }
+      else {
+        const newUser = new User({
+          username: profile.username,
+          oauthId: profile.id,
+          oauthProvider: "GitHub",
+          created: Date.now()
+        });
+        const savedUser = await newUser.save();
+        return done(null, savedUser);
+      }
+    }
+  )
+);
+
 passport.serializeUser(User.serializeUser()); 
 passport.deserializeUser(User.deserializeUser());
 
@@ -47,7 +76,7 @@ app.use('/expenses', expensesRouter);
 
 
 //mongodb connection
-const config = require('./config/globals');
+
 let connectionString = config.db;
 
 mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })

@@ -3,7 +3,10 @@ const plm = require("passport-local-mongoose");
 // create schema obj
 const schemaObj = {
   username: { type: String, required: true },
-  password: { type: String }, // Security Rule : Avoid storing plain text passwords!
+  password: { type: String }, 
+  oauthId: { type: String },
+  oauthProvider: { type: String },
+  created: { type: Date },
 };
 // create mongoose schema
 const mongooseSchema = new mongoose.Schema(schemaObj);
